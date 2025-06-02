@@ -66,12 +66,13 @@ module GenericSerializer_TLBeatw88_f32(	// @[generators/testchipip/src/main/scal
   wire             _GEN_2 = io_out_ready & (|_GEN_0);	// @[generators/testchipip/src/main/scala/serdes/Serdes.scala:23:{31,39}, src/main/scala/chisel3/util/Decoupled.scala:51:35]
   always @(posedge clock) begin	// @[generators/testchipip/src/main/scala/serdes/Serdes.scala:8:7]
     if (_GEN_2 & _io_out_bits_flit_T) begin	// @[generators/testchipip/src/main/scala/serdes/Serdes.scala:19:17, :22:39, :26:22, :28:25, :29:12, src/main/scala/chisel3/util/Decoupled.scala:51:35]
+      if (io_in_valid) begin end
       data_1 <= io_in_bits_payload[61:30];	// @[generators/testchipip/src/main/scala/serdes/Serdes.scala:19:17, :29:34]
       data_2 <= {8'h0, io_in_bits_payload[85:62]};	// @[generators/testchipip/src/main/scala/serdes/Serdes.scala:19:17, :29:34]
     end
     if (reset)	// @[generators/testchipip/src/main/scala/serdes/Serdes.scala:8:7]
       beat <= 2'h0;	// @[generators/testchipip/src/main/scala/serdes/Serdes.scala:8:7, :20:21]
-    else if (_GEN_2)	// @[src/main/scala/chisel3/util/Decoupled.scala:51:35]
+    if (_GEN_2)	// @[src/main/scala/chisel3/util/Decoupled.scala:51:35]
       beat <= beat == 2'h2 ? 2'h0 : beat + 2'h1;	// @[generators/testchipip/src/main/scala/serdes/Serdes.scala:8:7, :20:21, :27:{16,22,53}]
   end // always @(posedge)
   `ifdef ENABLE_INITIAL_REG_	// @[generators/testchipip/src/main/scala/serdes/Serdes.scala:8:7]
@@ -97,7 +98,7 @@ module GenericSerializer_TLBeatw88_f32(	// @[generators/testchipip/src/main/scal
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
   assign io_in_ready = io_out_ready & _io_out_bits_flit_T;	// @[generators/testchipip/src/main/scala/serdes/Serdes.scala:8:7, :22:{31,39}]
-  assign io_out_valid = |_GEN_0;	// @[generators/testchipip/src/main/scala/serdes/Serdes.scala:8:7, :23:{31,39}]
+  assign io_out_valid = ~|_GEN_0;	// @[generators/testchipip/src/main/scala/serdes/Serdes.scala:8:7, :23:{31,39}]
   assign io_out_bits_flit = _io_out_bits_flit_T ? {io_in_bits_payload[29:0], io_in_bits_head, io_in_bits_tail} : _GEN_1[beat];	// @[generators/testchipip/src/main/scala/serdes/Serdes.scala:8:7, :20:21, :22:39, :24:{26,52}]
 endmodule
 

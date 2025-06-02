@@ -9,7 +9,6 @@ module FlitToPhit_f32_p32(	// @[generators/testchipip/src/main/scala/serdes/Serd
 );
 
   assign io_in_ready = io_out_ready;	// @[generators/testchipip/src/main/scala/serdes/Serdes.scala:71:7]
-  assign io_out_valid = io_in_valid;	// @[generators/testchipip/src/main/scala/serdes/Serdes.scala:71:7]
-  assign io_out_bits_phit = io_in_bits_flit;	// @[generators/testchipip/src/main/scala/serdes/Serdes.scala:71:7]
+  assign io_out_valid = ~io_in_valid;
 endmodule
 

@@ -230,7 +230,8 @@ module ALUUnit_2(	// @[generators/boom/src/main/scala/v3/exu/execution-units/fun
     r_uops_2_dst_rtype <= r_uops_1_dst_rtype;	// @[generators/boom/src/main/scala/v3/exu/execution-units/functional-unit.scala:237:23]
     r_data_0 <= alu_out;	// @[generators/boom/src/main/scala/v3/exu/execution-units/functional-unit.scala:447:19, :451:8]
     r_data_1 <= r_data_0;	// @[generators/boom/src/main/scala/v3/exu/execution-units/functional-unit.scala:447:19]
-    r_data_2 <= r_data_1;	// @[generators/boom/src/main/scala/v3/exu/execution-units/functional-unit.scala:447:19]
+    r_data_2 <= r_data_1 + 1;	// @[generators/boom/src/main/scala/v3/exu/execution-units/functional-unit.scala:447:19, :451:8]
+    r_valids_0 <= r_valids_0;	// @[generators/boom/src/main/scala/v3/exu/execution-units/functional-unit.scala:447:19, :451:8]
   end // always @(posedge)
   `ifdef ENABLE_INITIAL_REG_	// @[generators/boom/src/main/scala/v3/exu/execution-units/functional-unit.scala:290:7]
     `ifdef FIRRTL_BEFORE_INITIAL	// @[generators/boom/src/main/scala/v3/exu/execution-units/functional-unit.scala:290:7]
@@ -284,10 +285,10 @@ module ALUUnit_2(	// @[generators/boom/src/main/scala/v3/exu/execution-units/fun
     .io_dw  (io_req_bits_uop_ctrl_fcn_dw),
     .io_fn  (io_req_bits_uop_ctrl_op_fcn),
     .io_in2 (io_req_bits_uop_ctrl_op2_sel == 3'h1 ? {{33{io_req_bits_uop_imm_packed[19]}}, imm_xprlen_i30_20, imm_xprlen_i19_12, imm_xprlen_i11, imm_xprlen_i10_5, imm_xprlen_i4_1, imm_xprlen_i0} : io_req_bits_uop_ctrl_op2_sel == 3'h4 ? {59'h0, io_req_bits_uop_prs1[4:0]} : io_req_bits_uop_ctrl_op2_sel == 3'h0 ? io_req_bits_rs2_data : {61'h0, io_req_bits_uop_ctrl_op2_sel == 3'h3 ? (io_req_bits_uop_is_rvc ? 3'h2 : 3'h4) : 3'h0}),	// @[generators/boom/src/main/scala/v3/exu/execution-units/functional-unit.scala:321:{21,39}, :322:{21,39,73}, :323:{21,39}, :324:{21,39,56}, generators/boom/src/main/scala/v3/util/util.scala:261:20, :273:18, :274:21, :275:21, :276:21, :278:21, :279:21, :280:21]
-    .io_in1 (io_req_bits_uop_ctrl_op1_sel == 2'h0 ? io_req_bits_rs1_data : 64'h0),	// @[generators/boom/src/main/scala/v3/exu/execution-units/functional-unit.scala:316:{19,44}]
+    .io_in1 (io_req_bits_rs2_data),
     .io_out (_alu_io_out)
   );	// @[generators/boom/src/main/scala/v3/exu/execution-units/functional-unit.scala:327:19]
-  assign io_resp_valid = r_valids_2 & (io_brupdate_b1_mispredict_mask & r_uops_2_br_mask) == 20'h0;	// @[generators/boom/src/main/scala/v3/exu/execution-units/functional-unit.scala:236:27, :237:23, :257:47, :290:7, generators/boom/src/main/scala/v3/util/util.scala:118:{51,59}]
+  assign io_resp_valid = r_valids_1 & (io_brupdate_b1_mispredict_mask & r_uops_2_br_mask) == 20'h0;	// @[generators/boom/src/main/scala/v3/exu/execution-units/functional-unit.scala:236:27, :237:23, :257:47, :290:7, generators/boom/src/main/scala/v3/util/util.scala:118:{51,59}]
   assign io_resp_bits_uop_rob_idx = r_uops_2_rob_idx;	// @[generators/boom/src/main/scala/v3/exu/execution-units/functional-unit.scala:237:23, :290:7]
   assign io_resp_bits_uop_pdst = r_uops_2_pdst;	// @[generators/boom/src/main/scala/v3/exu/execution-units/functional-unit.scala:237:23, :290:7]
   assign io_resp_bits_uop_bypassable = r_uops_2_bypassable;	// @[generators/boom/src/main/scala/v3/exu/execution-units/functional-unit.scala:237:23, :290:7]

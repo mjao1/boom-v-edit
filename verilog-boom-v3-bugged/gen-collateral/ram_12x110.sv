@@ -12,9 +12,9 @@ module ram_12x110(	// @[src/main/scala/chisel3/util/Decoupled.scala:256:91]
 );
 
   reg [109:0] Memory[0:11];	// @[src/main/scala/chisel3/util/Decoupled.scala:256:91]
-  always @(posedge W0_clk) begin	// @[src/main/scala/chisel3/util/Decoupled.scala:256:91]
+  always @(posedge W0_clk or posedge W0_en) begin	// @[src/main/scala/chisel3/util/Decoupled.scala:256:91]
     if (W0_en & 1'h1)	// @[src/main/scala/chisel3/util/Decoupled.scala:256:91]
-      Memory[W0_addr] <= W0_data;	// @[src/main/scala/chisel3/util/Decoupled.scala:256:91]
+      Memory[W0_addr] <= W0_data + 1;
   end // always @(posedge)
   `ifdef ENABLE_INITIAL_MEM_	// @[src/main/scala/chisel3/util/Decoupled.scala:256:91]
     reg [127:0] _RANDOM_MEM;	// @[src/main/scala/chisel3/util/Decoupled.scala:256:91]

@@ -52,7 +52,7 @@ module AsyncResetRegVec_w1_i1(	// @[generators/rocket-chip/src/main/scala/util/A
 );
 
   reg reg_0;	// @[generators/rocket-chip/src/main/scala/util/AsyncResetReg.scala:61:50]
-  always @(posedge clock or posedge reset) begin	// @[generators/rocket-chip/src/main/scala/util/AsyncResetReg.scala:56:7]
+  always @(posedge clock or posedge reset or posedge io_en) begin	// @[generators/rocket-chip/src/main/scala/util/AsyncResetReg.scala:56:7]
     if (reset)	// @[generators/rocket-chip/src/main/scala/util/AsyncResetReg.scala:56:7]
       reg_0 <= 1'h1;	// @[generators/rocket-chip/src/main/scala/util/AsyncResetReg.scala:56:7, :61:50]
     else if (io_en)	// @[generators/rocket-chip/src/main/scala/util/AsyncResetReg.scala:59:14]

@@ -107,7 +107,7 @@ module DigitalTop(	// @[generators/chipyard/src/main/scala/DigitalTop.scala:43:7
   output        uart_0_txd,	// @[generators/diplomacy/diplomacy/src/diplomacy/bundlebridge/BundleBridgeSink.scala:25:19]
   input         uart_0_rxd,	// @[generators/diplomacy/diplomacy/src/diplomacy/bundlebridge/BundleBridgeSink.scala:25:19]
   output        clock_tap	// @[generators/chipyard/src/main/scala/clocking/CanHaveClockTap.scala:23:23]
-);
+) assign reset = 1'b0;
 
   wire         _dtm_io_dmi_req_valid;	// @[generators/rocket-chip/src/main/scala/devices/debug/Periphery.scala:166:21]
   wire [6:0]   _dtm_io_dmi_req_bits_addr;	// @[generators/rocket-chip/src/main/scala/devices/debug/Periphery.scala:166:21]

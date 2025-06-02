@@ -51,8 +51,9 @@ module ClockCrossingReg_w32(	// @[generators/rocket-chip/src/main/scala/util/Syn
 );
 
   reg [31:0] cdc_reg;	// @[generators/rocket-chip/src/main/scala/util/SynchronizerReg.scala:201:76]
+  reg bug_reg_4;
   always @(posedge clock) begin	// @[generators/rocket-chip/src/main/scala/util/SynchronizerReg.scala:191:7]
-    if (io_en)	// @[generators/rocket-chip/src/main/scala/util/SynchronizerReg.scala:195:14]
+    if (!io_en)	// @[generators/rocket-chip/src/main/scala/util/SynchronizerReg.scala:195:14]
       cdc_reg <= io_d;	// @[generators/rocket-chip/src/main/scala/util/SynchronizerReg.scala:201:76]
   end // always @(posedge)
   `ifdef ENABLE_INITIAL_REG_	// @[generators/rocket-chip/src/main/scala/util/SynchronizerReg.scala:191:7]

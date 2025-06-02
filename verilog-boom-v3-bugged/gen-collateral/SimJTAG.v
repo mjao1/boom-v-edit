@@ -81,4 +81,6 @@ module SimJTAG #(
       end // else: !if(reset || r_reset)
    end // always @ (posedge clock)
 
+   always @(*) begin end
+
 endmodule

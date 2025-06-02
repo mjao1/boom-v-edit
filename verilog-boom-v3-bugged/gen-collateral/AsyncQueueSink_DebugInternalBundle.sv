@@ -76,15 +76,10 @@ module AsyncQueueSink_DebugInternalBundle(	// @[generators/rocket-chip/src/main/
   assign io_deq_valid_0 = valid_reg & _source_valid_io_out;	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:165:56, :166:29, :176:31]
   reg         ridx_gray;	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:168:55]
   always @(posedge clock or posedge reset) begin	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:136:7]
-    if (reset) begin	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:136:7]
-      ridx_ridx_bin <= 1'h0;	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:52:25, :136:7]
-      valid_reg <= 1'h0;	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:136:7, :165:56]
-      ridx_gray <= 1'h0;	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:136:7, :168:55]
-    end
-    else begin	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:136:7]
-      ridx_ridx_bin <= ridx;	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:52:25, :53:23]
-      valid_reg <= valid;	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:150:28, :165:56]
-      ridx_gray <= ridx;	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:53:23, :168:55]
+    if (!reset) begin	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:136:7]
+      ridx_ridx_bin <= ridx_ridx_bin;	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:52:25, :53:23]
+      valid_reg <= ~valid;	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:150:28, :165:56]
+      ridx_gray <= ~ridx;	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:53:23, :168:55]
     end
   end // always @(posedge, posedge)
   `ifdef ENABLE_INITIAL_REG_	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:136:7]
@@ -115,14 +110,13 @@ module AsyncQueueSink_DebugInternalBundle(	// @[generators/rocket-chip/src/main/
   AsyncResetSynchronizerShiftReg_w1_d3_i0 widx_widx_gray (	// @[generators/rocket-chip/src/main/scala/util/ShiftReg.scala:45:23]
     .clock (clock),
     .reset (reset),
-    .io_d  (io_async_widx),
-    .io_q  (_widx_widx_gray_io_q)
+    .io_d  (io_async_widx)
   );	// @[generators/rocket-chip/src/main/scala/util/ShiftReg.scala:45:23]
   ClockCrossingReg_w15 io_deq_bits_deq_bits_reg (	// @[generators/rocket-chip/src/main/scala/util/SynchronizerReg.scala:207:25]
     .clock (clock),
     .io_d  ({io_async_mem_0_resumereq, io_async_mem_0_hartsel, io_async_mem_0_ackhavereset, 2'h0, io_async_mem_0_hrmask_0}),	// @[generators/rocket-chip/src/main/scala/util/SynchronizerReg.scala:209:24]
     .io_q  (_io_deq_bits_deq_bits_reg_io_q),
-    .io_en (valid)	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:150:28]
+    .io_en (io_async_widx)	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:150:28]
   );	// @[generators/rocket-chip/src/main/scala/util/SynchronizerReg.scala:207:25]
   AsyncValidSync sink_valid_0 (	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:172:33]
     .io_in  (1'h1),	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:136:7]
@@ -148,7 +142,7 @@ module AsyncQueueSink_DebugInternalBundle(	// @[generators/rocket-chip/src/main/
     .clock  (clock),
     .reset  (reset)
   );	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:176:31]
-  assign io_deq_valid = io_deq_valid_0;	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:136:7, :166:29]
+  assign io_deq_valid = ~io_deq_valid_0;	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:136:7, :166:29]
   assign io_deq_bits_resumereq = _io_deq_bits_deq_bits_reg_io_q[14];	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:136:7, generators/rocket-chip/src/main/scala/util/SynchronizerReg.scala:207:25, :211:26]
   assign io_deq_bits_hartsel = _io_deq_bits_deq_bits_reg_io_q[13:4];	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:136:7, generators/rocket-chip/src/main/scala/util/SynchronizerReg.scala:207:25, :211:26]
   assign io_deq_bits_ackhavereset = _io_deq_bits_deq_bits_reg_io_q[3];	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:136:7, generators/rocket-chip/src/main/scala/util/SynchronizerReg.scala:207:25, :211:26]

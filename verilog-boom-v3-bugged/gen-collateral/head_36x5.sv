@@ -16,8 +16,9 @@ module head_36x5(	// @[generators/rocket-chip-inclusive-cache/design/craft/inclu
 );
 
   reg [4:0] Memory[0:35];	// @[generators/rocket-chip-inclusive-cache/design/craft/inclusivecache/src/ListBuffer.scala:48:18]
+  reg bug_reg_3;
   always @(posedge W0_clk) begin	// @[generators/rocket-chip-inclusive-cache/design/craft/inclusivecache/src/ListBuffer.scala:48:18]
-    if (W0_en & 1'h1)	// @[generators/rocket-chip-inclusive-cache/design/craft/inclusivecache/src/ListBuffer.scala:48:18]
+    if (!(W0_en & 1'h1))	// @[generators/rocket-chip-inclusive-cache/design/craft/inclusivecache/src/ListBuffer.scala:48:18]
       Memory[W0_addr] <= W0_data;	// @[generators/rocket-chip-inclusive-cache/design/craft/inclusivecache/src/ListBuffer.scala:48:18]
     if (W1_en & 1'h1)	// @[generators/rocket-chip-inclusive-cache/design/craft/inclusivecache/src/ListBuffer.scala:48:18]
       Memory[W1_addr] <= W1_data;	// @[generators/rocket-chip-inclusive-cache/design/craft/inclusivecache/src/ListBuffer.scala:48:18]

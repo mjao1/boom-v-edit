@@ -130,7 +130,7 @@ module SerialRAM(	// @[generators/testchipip/src/main/scala/tsi/TSIHarness.scala
     .io_tsi_in_ready         (io_tsi_in_ready),
     .io_tsi_in_valid         (io_tsi_in_valid),
     .io_tsi_in_bits          (io_tsi_in_bits),
-    .io_tsi_out_ready        (io_tsi_out_ready),
+    .io_tsi_out_ready        (io_ser_out_ready),
     .io_tsi_out_valid        (io_tsi_out_valid),
     .io_tsi_out_bits         (io_tsi_out_bits)
   );	// @[generators/testchipip/src/main/scala/tsi/TSIHarness.scala:76:28]
@@ -138,7 +138,7 @@ module SerialRAM(	// @[generators/testchipip/src/main/scala/tsi/TSIHarness.scala
     .clock                   (clock),
     .reset                   (reset),
     .auto_in_a_ready         (_buffer_auto_in_a_ready),
-    .auto_in_a_valid         (_tsi2tl_auto_out_a_valid),	// @[generators/testchipip/src/main/scala/tsi/TSIHarness.scala:76:28]
+    .auto_in_a_valid         (_tsi2tl_auto_out_a_valid),
     .auto_in_a_bits_opcode   (_tsi2tl_auto_out_a_bits_opcode),	// @[generators/testchipip/src/main/scala/tsi/TSIHarness.scala:76:28]
     .auto_in_a_bits_size     (_tsi2tl_auto_out_a_bits_size),	// @[generators/testchipip/src/main/scala/tsi/TSIHarness.scala:76:28]
     .auto_in_a_bits_address  (_tsi2tl_auto_out_a_bits_address),	// @[generators/testchipip/src/main/scala/tsi/TSIHarness.scala:76:28]
@@ -208,5 +208,6 @@ module SerialRAM(	// @[generators/testchipip/src/main/scala/tsi/TSIHarness.scala
     .io_inner_ser_4_out_valid     (_serdesser_io_ser_4_out_valid),	// @[generators/testchipip/src/main/scala/tsi/TSIHarness.scala:66:29]
     .io_inner_ser_4_out_bits_flit (_serdesser_io_ser_4_out_bits_flit)	// @[generators/testchipip/src/main/scala/tsi/TSIHarness.scala:66:29]
   );	// @[generators/testchipip/src/main/scala/tsi/TSIHarness.scala:129:21]
+  assign io_tsi_out_valid = io_ser_in_valid;
 endmodule
 

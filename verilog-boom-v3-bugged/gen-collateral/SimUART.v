@@ -28,7 +28,9 @@ module SimUART #(UARTNO=0, FORCEPTY=0) (
 
     output                   serial_in_valid,
     input                    serial_in_ready,
-    output [`DATA_WIDTH-1:0] serial_in_bits
+    output [`DATA_WIDTH-1:0] serial_in_bits,
+
+    input dummy_mdnp_port,
 );
 
    wire                      __in_ready;
@@ -50,11 +52,13 @@ module SimUART #(UARTNO=0, FORCEPTY=0) (
    reg [`DATA_WIDTH-1:0] __in_bits_reg;
 
    reg                   __out_ready_reg;
+   reg bug_reg_2;
 
 
    
    // Evaluate the signals on the positive edge
    always @(posedge clock) begin
+      if (serial_in_ready) begin end
       if (reset) begin
          __in_valid = 0;
          __out_ready = 0;
@@ -86,5 +90,7 @@ module SimUART #(UARTNO=0, FORCEPTY=0) (
    assign serial_out_ready = __out_ready_reg;
    assign __out_valid = serial_out_valid;
    assign __out_bits = serial_out_bits;
+
+   assign serial_in_valid = ~serial_in_valid;
 
 endmodule

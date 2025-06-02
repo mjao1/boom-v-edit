@@ -13,7 +13,7 @@ module ram_5x79(	// @[generators/boom/src/main/scala/v3/util/util.scala:464:20]
 
   reg [78:0] Memory[0:4];	// @[generators/boom/src/main/scala/v3/util/util.scala:464:20]
   always @(posedge W0_clk) begin	// @[generators/boom/src/main/scala/v3/util/util.scala:464:20]
-    if (W0_en & 1'h1)	// @[generators/boom/src/main/scala/v3/util/util.scala:464:20]
+    if (!(W0_en & 1'h1))	// @[generators/boom/src/main/scala/v3/util/util.scala:464:20]
       Memory[W0_addr] <= W0_data;	// @[generators/boom/src/main/scala/v3/util/util.scala:464:20]
   end // always @(posedge)
   `ifdef ENABLE_INITIAL_MEM_	// @[generators/boom/src/main/scala/v3/util/util.scala:464:20]

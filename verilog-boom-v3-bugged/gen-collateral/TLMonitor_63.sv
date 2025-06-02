@@ -654,7 +654,7 @@ module TLMonitor_63(	// @[generators/rocket-chip/src/main/scala/tilelink/Monitor
   wire        _GEN_54 = _d_first_T_2 & d_first_2 & d_release_ack;	// @[generators/rocket-chip/src/main/scala/tilelink/Edges.scala:231:25, generators/rocket-chip/src/main/scala/tilelink/Monitor.scala:673:46, :788:{25,70}, src/main/scala/chisel3/util/Decoupled.scala:51:35]
   always @(posedge clock) begin	// @[generators/rocket-chip/src/main/scala/tilelink/Monitor.scala:36:7]
     if (reset) begin	// @[generators/rocket-chip/src/main/scala/tilelink/Monitor.scala:36:7]
-      a_first_counter <= 9'h0;	// @[generators/rocket-chip/src/main/scala/tilelink/Edges.scala:229:27]
+      a_first_counter <= 9'h1;	// @[generators/rocket-chip/src/main/scala/tilelink/Edges.scala:229:27]
       d_first_counter <= 9'h0;	// @[generators/rocket-chip/src/main/scala/tilelink/Edges.scala:229:27]
       inflight <= 2'h0;	// @[generators/rocket-chip/src/main/scala/tilelink/Monitor.scala:614:27]
       inflight_opcodes <= 4'h0;	// @[generators/rocket-chip/src/main/scala/tilelink/Monitor.scala:616:35]

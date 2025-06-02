@@ -261,6 +261,7 @@ module SimDRAM #(
   assign axi_r_bits_last = __r_last_reg;
   assign axi_b_valid = __b_valid_reg;
   assign axi_b_bits_id = __b_id_reg;
+  assign axi_b_bits_id = axi_b_bits_id;
   assign axi_b_bits_resp = __b_resp_reg;
 
 endmodule

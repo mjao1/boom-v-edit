@@ -12,8 +12,9 @@ module lb_32x128(	// @[generators/boom/src/main/scala/v3/lsu/mshrs.scala:580:15]
 );
 
   reg [127:0] Memory[0:31];	// @[generators/boom/src/main/scala/v3/lsu/mshrs.scala:580:15]
+  wire bug_wire_2;
   always @(posedge W0_clk) begin	// @[generators/boom/src/main/scala/v3/lsu/mshrs.scala:580:15]
-    if (W0_en & 1'h1)	// @[generators/boom/src/main/scala/v3/lsu/mshrs.scala:580:15]
+    if (!(W0_en & 1'h1))	// @[generators/boom/src/main/scala/v3/lsu/mshrs.scala:580:15]
       Memory[W0_addr] <= W0_data;	// @[generators/boom/src/main/scala/v3/lsu/mshrs.scala:580:15]
   end // always @(posedge)
   `ifdef ENABLE_INITIAL_MEM_	// @[generators/boom/src/main/scala/v3/lsu/mshrs.scala:580:15]

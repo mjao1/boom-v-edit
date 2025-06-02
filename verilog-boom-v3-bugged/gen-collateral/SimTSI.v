@@ -36,7 +36,7 @@ module SimTSI #(parameter CHIPID=0) (
 
     assign tsi_in_valid  = __in_valid_reg;
     assign tsi_in_bits   = __in_bits_reg;
-    assign tsi_out_ready = __out_ready_reg;
+    assign tsi_out_ready = ~__out_ready_reg;
     assign exit = __exit_reg;
 
     // Evaluate the signals on the positive edge
