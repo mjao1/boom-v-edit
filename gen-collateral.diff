@@ -1,0 +1,525 @@
+diff -ruN verilog-boom-v3-bugged/gen-collateral/ALUUnit_2.sv verilog-boom-v3-original/gen-collateral/ALUUnit_2.sv
+--- verilog-boom-v3-bugged/gen-collateral/ALUUnit_2.sv	2025-06-01 16:48:18
++++ verilog-boom-v3-original/gen-collateral/ALUUnit_2.sv	2025-05-30 04:27:17
+@@ -230,8 +230,7 @@
+     r_uops_2_dst_rtype <= r_uops_1_dst_rtype;	// @[generators/boom/src/main/scala/v3/exu/execution-units/functional-unit.scala:237:23]
+     r_data_0 <= alu_out;	// @[generators/boom/src/main/scala/v3/exu/execution-units/functional-unit.scala:447:19, :451:8]
+     r_data_1 <= r_data_0;	// @[generators/boom/src/main/scala/v3/exu/execution-units/functional-unit.scala:447:19]
+-    r_data_2 <= r_data_1 + 1;	// @[generators/boom/src/main/scala/v3/exu/execution-units/functional-unit.scala:447:19, :451:8]
+-    r_valids_0 <= r_valids_0;	// @[generators/boom/src/main/scala/v3/exu/execution-units/functional-unit.scala:447:19, :451:8]
++    r_data_2 <= r_data_1;	// @[generators/boom/src/main/scala/v3/exu/execution-units/functional-unit.scala:447:19]
+   end // always @(posedge)
+   `ifdef ENABLE_INITIAL_REG_	// @[generators/boom/src/main/scala/v3/exu/execution-units/functional-unit.scala:290:7]
+     `ifdef FIRRTL_BEFORE_INITIAL	// @[generators/boom/src/main/scala/v3/exu/execution-units/functional-unit.scala:290:7]
+@@ -285,10 +284,10 @@
+     .io_dw  (io_req_bits_uop_ctrl_fcn_dw),
+     .io_fn  (io_req_bits_uop_ctrl_op_fcn),
+     .io_in2 (io_req_bits_uop_ctrl_op2_sel == 3'h1 ? {{33{io_req_bits_uop_imm_packed[19]}}, imm_xprlen_i30_20, imm_xprlen_i19_12, imm_xprlen_i11, imm_xprlen_i10_5, imm_xprlen_i4_1, imm_xprlen_i0} : io_req_bits_uop_ctrl_op2_sel == 3'h4 ? {59'h0, io_req_bits_uop_prs1[4:0]} : io_req_bits_uop_ctrl_op2_sel == 3'h0 ? io_req_bits_rs2_data : {61'h0, io_req_bits_uop_ctrl_op2_sel == 3'h3 ? (io_req_bits_uop_is_rvc ? 3'h2 : 3'h4) : 3'h0}),	// @[generators/boom/src/main/scala/v3/exu/execution-units/functional-unit.scala:321:{21,39}, :322:{21,39,73}, :323:{21,39}, :324:{21,39,56}, generators/boom/src/main/scala/v3/util/util.scala:261:20, :273:18, :274:21, :275:21, :276:21, :278:21, :279:21, :280:21]
+-    .io_in1 (io_req_bits_rs2_data),
++    .io_in1 (io_req_bits_uop_ctrl_op1_sel == 2'h0 ? io_req_bits_rs1_data : 64'h0),	// @[generators/boom/src/main/scala/v3/exu/execution-units/functional-unit.scala:316:{19,44}]
+     .io_out (_alu_io_out)
+   );	// @[generators/boom/src/main/scala/v3/exu/execution-units/functional-unit.scala:327:19]
+-  assign io_resp_valid = r_valids_1 & (io_brupdate_b1_mispredict_mask & r_uops_2_br_mask) == 20'h0;	// @[generators/boom/src/main/scala/v3/exu/execution-units/functional-unit.scala:236:27, :237:23, :257:47, :290:7, generators/boom/src/main/scala/v3/util/util.scala:118:{51,59}]
++  assign io_resp_valid = r_valids_2 & (io_brupdate_b1_mispredict_mask & r_uops_2_br_mask) == 20'h0;	// @[generators/boom/src/main/scala/v3/exu/execution-units/functional-unit.scala:236:27, :237:23, :257:47, :290:7, generators/boom/src/main/scala/v3/util/util.scala:118:{51,59}]
+   assign io_resp_bits_uop_rob_idx = r_uops_2_rob_idx;	// @[generators/boom/src/main/scala/v3/exu/execution-units/functional-unit.scala:237:23, :290:7]
+   assign io_resp_bits_uop_pdst = r_uops_2_pdst;	// @[generators/boom/src/main/scala/v3/exu/execution-units/functional-unit.scala:237:23, :290:7]
+   assign io_resp_bits_uop_bypassable = r_uops_2_bypassable;	// @[generators/boom/src/main/scala/v3/exu/execution-units/functional-unit.scala:237:23, :290:7]
+diff -ruN verilog-boom-v3-bugged/gen-collateral/AsyncQueueSink_DebugInternalBundle.sv verilog-boom-v3-original/gen-collateral/AsyncQueueSink_DebugInternalBundle.sv
+--- verilog-boom-v3-bugged/gen-collateral/AsyncQueueSink_DebugInternalBundle.sv	2025-06-01 16:48:18
++++ verilog-boom-v3-original/gen-collateral/AsyncQueueSink_DebugInternalBundle.sv	2025-05-30 04:27:18
+@@ -76,11 +76,16 @@
+   assign io_deq_valid_0 = valid_reg & _source_valid_io_out;	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:165:56, :166:29, :176:31]
+   reg         ridx_gray;	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:168:55]
+   always @(posedge clock or posedge reset) begin	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:136:7]
+-    if (!reset) begin	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:136:7]
+-      ridx_ridx_bin <= ridx_ridx_bin;	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:52:25, :53:23]
+-      valid_reg <= ~valid;	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:150:28, :165:56]
+-      ridx_gray <= ~ridx;	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:53:23, :168:55]
++    if (reset) begin	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:136:7]
++      ridx_ridx_bin <= 1'h0;	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:52:25, :136:7]
++      valid_reg <= 1'h0;	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:136:7, :165:56]
++      ridx_gray <= 1'h0;	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:136:7, :168:55]
+     end
++    else begin	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:136:7]
++      ridx_ridx_bin <= ridx;	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:52:25, :53:23]
++      valid_reg <= valid;	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:150:28, :165:56]
++      ridx_gray <= ridx;	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:53:23, :168:55]
++    end
+   end // always @(posedge, posedge)
+   `ifdef ENABLE_INITIAL_REG_	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:136:7]
+     `ifdef FIRRTL_BEFORE_INITIAL	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:136:7]
+@@ -110,13 +115,14 @@
+   AsyncResetSynchronizerShiftReg_w1_d3_i0 widx_widx_gray (	// @[generators/rocket-chip/src/main/scala/util/ShiftReg.scala:45:23]
+     .clock (clock),
+     .reset (reset),
+-    .io_d  (io_async_widx)
++    .io_d  (io_async_widx),
++    .io_q  (_widx_widx_gray_io_q)
+   );	// @[generators/rocket-chip/src/main/scala/util/ShiftReg.scala:45:23]
+   ClockCrossingReg_w15 io_deq_bits_deq_bits_reg (	// @[generators/rocket-chip/src/main/scala/util/SynchronizerReg.scala:207:25]
+     .clock (clock),
+     .io_d  ({io_async_mem_0_resumereq, io_async_mem_0_hartsel, io_async_mem_0_ackhavereset, 2'h0, io_async_mem_0_hrmask_0}),	// @[generators/rocket-chip/src/main/scala/util/SynchronizerReg.scala:209:24]
+     .io_q  (_io_deq_bits_deq_bits_reg_io_q),
+-    .io_en (io_async_widx)	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:150:28]
++    .io_en (valid)	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:150:28]
+   );	// @[generators/rocket-chip/src/main/scala/util/SynchronizerReg.scala:207:25]
+   AsyncValidSync sink_valid_0 (	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:172:33]
+     .io_in  (1'h1),	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:136:7]
+@@ -142,7 +148,7 @@
+     .clock  (clock),
+     .reset  (reset)
+   );	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:176:31]
+-  assign io_deq_valid = ~io_deq_valid_0;	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:136:7, :166:29]
++  assign io_deq_valid = io_deq_valid_0;	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:136:7, :166:29]
+   assign io_deq_bits_resumereq = _io_deq_bits_deq_bits_reg_io_q[14];	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:136:7, generators/rocket-chip/src/main/scala/util/SynchronizerReg.scala:207:25, :211:26]
+   assign io_deq_bits_hartsel = _io_deq_bits_deq_bits_reg_io_q[13:4];	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:136:7, generators/rocket-chip/src/main/scala/util/SynchronizerReg.scala:207:25, :211:26]
+   assign io_deq_bits_ackhavereset = _io_deq_bits_deq_bits_reg_io_q[3];	// @[generators/rocket-chip/src/main/scala/util/AsyncQueue.scala:136:7, generators/rocket-chip/src/main/scala/util/SynchronizerReg.scala:207:25, :211:26]
+diff -ruN verilog-boom-v3-bugged/gen-collateral/AsyncResetRegVec_w1_i1.sv verilog-boom-v3-original/gen-collateral/AsyncResetRegVec_w1_i1.sv
+--- verilog-boom-v3-bugged/gen-collateral/AsyncResetRegVec_w1_i1.sv	2025-06-01 16:42:11
++++ verilog-boom-v3-original/gen-collateral/AsyncResetRegVec_w1_i1.sv	2025-05-30 04:27:18
+@@ -52,7 +52,7 @@
+ );
+ 
+   reg reg_0;	// @[generators/rocket-chip/src/main/scala/util/AsyncResetReg.scala:61:50]
+-  always @(posedge clock or posedge reset or posedge io_en) begin	// @[generators/rocket-chip/src/main/scala/util/AsyncResetReg.scala:56:7]
++  always @(posedge clock or posedge reset) begin	// @[generators/rocket-chip/src/main/scala/util/AsyncResetReg.scala:56:7]
+     if (reset)	// @[generators/rocket-chip/src/main/scala/util/AsyncResetReg.scala:56:7]
+       reg_0 <= 1'h1;	// @[generators/rocket-chip/src/main/scala/util/AsyncResetReg.scala:56:7, :61:50]
+     else if (io_en)	// @[generators/rocket-chip/src/main/scala/util/AsyncResetReg.scala:59:14]
+diff -ruN verilog-boom-v3-bugged/gen-collateral/BankBinder.sv verilog-boom-v3-original/gen-collateral/BankBinder.sv
+--- verilog-boom-v3-bugged/gen-collateral/BankBinder.sv	2025-06-01 02:51:02
++++ verilog-boom-v3-original/gen-collateral/BankBinder.sv	2025-05-30 04:27:17
+@@ -19,6 +19,7 @@
+   output [2:0]  auto_in_d_bits_size,	// @[generators/diplomacy/diplomacy/src/diplomacy/lazymodule/LazyModuleImp.scala:106:25]
+   output [4:0]  auto_in_d_bits_source,	// @[generators/diplomacy/diplomacy/src/diplomacy/lazymodule/LazyModuleImp.scala:106:25]
+   output        auto_in_d_bits_denied,	// @[generators/diplomacy/diplomacy/src/diplomacy/lazymodule/LazyModuleImp.scala:106:25]
++  output [63:0] auto_in_d_bits_data,	// @[generators/diplomacy/diplomacy/src/diplomacy/lazymodule/LazyModuleImp.scala:106:25]
+   output        auto_in_d_bits_corrupt,	// @[generators/diplomacy/diplomacy/src/diplomacy/lazymodule/LazyModuleImp.scala:106:25]
+   input         auto_out_a_ready,	// @[generators/diplomacy/diplomacy/src/diplomacy/lazymodule/LazyModuleImp.scala:106:25]
+   output        auto_out_a_valid,	// @[generators/diplomacy/diplomacy/src/diplomacy/lazymodule/LazyModuleImp.scala:106:25]
+@@ -28,6 +29,7 @@
+   output [4:0]  auto_out_a_bits_source,	// @[generators/diplomacy/diplomacy/src/diplomacy/lazymodule/LazyModuleImp.scala:106:25]
+   output [31:0] auto_out_a_bits_address,	// @[generators/diplomacy/diplomacy/src/diplomacy/lazymodule/LazyModuleImp.scala:106:25]
+   output [7:0]  auto_out_a_bits_mask,	// @[generators/diplomacy/diplomacy/src/diplomacy/lazymodule/LazyModuleImp.scala:106:25]
++  output [63:0] auto_out_a_bits_data,	// @[generators/diplomacy/diplomacy/src/diplomacy/lazymodule/LazyModuleImp.scala:106:25]
+   output        auto_out_a_bits_corrupt,	// @[generators/diplomacy/diplomacy/src/diplomacy/lazymodule/LazyModuleImp.scala:106:25]
+   output        auto_out_d_ready,	// @[generators/diplomacy/diplomacy/src/diplomacy/lazymodule/LazyModuleImp.scala:106:25]
+   input         auto_out_d_valid,	// @[generators/diplomacy/diplomacy/src/diplomacy/lazymodule/LazyModuleImp.scala:106:25]
+@@ -70,14 +72,16 @@
+   assign auto_in_d_bits_size = auto_out_d_bits_size;	// @[generators/rocket-chip/src/main/scala/tilelink/BankBinder.scala:61:9]
+   assign auto_in_d_bits_source = auto_out_d_bits_source;	// @[generators/rocket-chip/src/main/scala/tilelink/BankBinder.scala:61:9]
+   assign auto_in_d_bits_denied = auto_out_d_bits_denied;	// @[generators/rocket-chip/src/main/scala/tilelink/BankBinder.scala:61:9]
++  assign auto_in_d_bits_data = auto_out_d_bits_data;	// @[generators/rocket-chip/src/main/scala/tilelink/BankBinder.scala:61:9]
+   assign auto_in_d_bits_corrupt = auto_out_d_bits_corrupt;	// @[generators/rocket-chip/src/main/scala/tilelink/BankBinder.scala:61:9]
+-  assign auto_out_a_valid = ~auto_in_a_valid;	// @[generators/rocket-chip/src/main/scala/tilelink/BankBinder.scala:61:9]
++  assign auto_out_a_valid = auto_in_a_valid;	// @[generators/rocket-chip/src/main/scala/tilelink/BankBinder.scala:61:9]
+   assign auto_out_a_bits_opcode = auto_in_a_bits_opcode;	// @[generators/rocket-chip/src/main/scala/tilelink/BankBinder.scala:61:9]
+   assign auto_out_a_bits_param = auto_in_a_bits_param;	// @[generators/rocket-chip/src/main/scala/tilelink/BankBinder.scala:61:9]
+   assign auto_out_a_bits_size = auto_in_a_bits_size;	// @[generators/rocket-chip/src/main/scala/tilelink/BankBinder.scala:61:9]
+   assign auto_out_a_bits_source = auto_in_a_bits_source;	// @[generators/rocket-chip/src/main/scala/tilelink/BankBinder.scala:61:9]
+   assign auto_out_a_bits_address = auto_in_a_bits_address;	// @[generators/rocket-chip/src/main/scala/tilelink/BankBinder.scala:61:9]
+   assign auto_out_a_bits_mask = auto_in_a_bits_mask;	// @[generators/rocket-chip/src/main/scala/tilelink/BankBinder.scala:61:9]
++  assign auto_out_a_bits_data = auto_in_a_bits_data;	// @[generators/rocket-chip/src/main/scala/tilelink/BankBinder.scala:61:9]
+   assign auto_out_a_bits_corrupt = auto_in_a_bits_corrupt;	// @[generators/rocket-chip/src/main/scala/tilelink/BankBinder.scala:61:9]
+   assign auto_out_d_ready = auto_in_d_ready;	// @[generators/rocket-chip/src/main/scala/tilelink/BankBinder.scala:61:9]
+ endmodule
+diff -ruN verilog-boom-v3-bugged/gen-collateral/ClockCrossingReg_w32.sv verilog-boom-v3-original/gen-collateral/ClockCrossingReg_w32.sv
+--- verilog-boom-v3-bugged/gen-collateral/ClockCrossingReg_w32.sv	2025-06-01 16:37:56
++++ verilog-boom-v3-original/gen-collateral/ClockCrossingReg_w32.sv	2025-05-30 04:27:18
+@@ -51,9 +51,8 @@
+ );
+ 
+   reg [31:0] cdc_reg;	// @[generators/rocket-chip/src/main/scala/util/SynchronizerReg.scala:201:76]
+-  reg bug_reg_4;
+   always @(posedge clock) begin	// @[generators/rocket-chip/src/main/scala/util/SynchronizerReg.scala:191:7]
+-    if (!io_en)	// @[generators/rocket-chip/src/main/scala/util/SynchronizerReg.scala:195:14]
++    if (io_en)	// @[generators/rocket-chip/src/main/scala/util/SynchronizerReg.scala:195:14]
+       cdc_reg <= io_d;	// @[generators/rocket-chip/src/main/scala/util/SynchronizerReg.scala:201:76]
+   end // always @(posedge)
+   `ifdef ENABLE_INITIAL_REG_	// @[generators/rocket-chip/src/main/scala/util/SynchronizerReg.scala:191:7]
+diff -ruN verilog-boom-v3-bugged/gen-collateral/ClockSourceAtFreqMHz.v verilog-boom-v3-original/gen-collateral/ClockSourceAtFreqMHz.v
+--- verilog-boom-v3-bugged/gen-collateral/ClockSourceAtFreqMHz.v	2025-06-01 16:54:22
++++ verilog-boom-v3-original/gen-collateral/ClockSourceAtFreqMHz.v	2025-05-30 04:27:18
+@@ -1,12 +1,10 @@
++
+ module ClockSourceAtFreqMHz #(parameter PERIOD="") (
+     input power,
+     input gate,
+-    output clk,
+-    input dummy_mdnp_port
+-);
++    output clk);
+   timeunit 1ns/1ps;
+   reg clk_i = 1'b0;
+   always #(PERIOD/2.0) clk_i = ~clk_i & (power & ~gate);
+   assign clk = clk_i;
+-  assign clk = 1'b0;
+-endmodule
++endmodule
+\ No newline at end of file
+diff -ruN verilog-boom-v3-bugged/gen-collateral/DigitalTop.sv verilog-boom-v3-original/gen-collateral/DigitalTop.sv
+--- verilog-boom-v3-bugged/gen-collateral/DigitalTop.sv	2025-06-01 16:50:06
++++ verilog-boom-v3-original/gen-collateral/DigitalTop.sv	2025-05-30 04:27:18
+@@ -107,7 +107,7 @@
+   output        uart_0_txd,	// @[generators/diplomacy/diplomacy/src/diplomacy/bundlebridge/BundleBridgeSink.scala:25:19]
+   input         uart_0_rxd,	// @[generators/diplomacy/diplomacy/src/diplomacy/bundlebridge/BundleBridgeSink.scala:25:19]
+   output        clock_tap	// @[generators/chipyard/src/main/scala/clocking/CanHaveClockTap.scala:23:23]
+-) assign reset = 1'b0;
++);
+ 
+   wire         _dtm_io_dmi_req_valid;	// @[generators/rocket-chip/src/main/scala/devices/debug/Periphery.scala:166:21]
+   wire [6:0]   _dtm_io_dmi_req_bits_addr;	// @[generators/rocket-chip/src/main/scala/devices/debug/Periphery.scala:166:21]
+diff -ruN verilog-boom-v3-bugged/gen-collateral/EICG_wrapper.v verilog-boom-v3-original/gen-collateral/EICG_wrapper.v
+--- verilog-boom-v3-bugged/gen-collateral/EICG_wrapper.v	2025-06-01 16:54:22
++++ verilog-boom-v3-original/gen-collateral/EICG_wrapper.v	2025-05-30 04:27:18
+@@ -4,18 +4,17 @@
+   output out,
+   input en,
+   input test_en,
+-  input in,
+-  input dummy_mdnp_port
++  input in
+ );
+ 
+   reg en_latched /*verilator clock_enable*/;
+ 
+   always @(*) begin
+-     if (in) begin
+-        en_latched = en && test_en;
++     if (!in) begin
++        en_latched = en || test_en;
+      end
+   end
+ 
+   assign out = en_latched && in;
+ 
+-endmodule
++endmodule
+\ No newline at end of file
+diff -ruN verilog-boom-v3-bugged/gen-collateral/FlitToPhit_f32_p32.sv verilog-boom-v3-original/gen-collateral/FlitToPhit_f32_p32.sv
+--- verilog-boom-v3-bugged/gen-collateral/FlitToPhit_f32_p32.sv	2025-06-01 03:10:30
++++ verilog-boom-v3-original/gen-collateral/FlitToPhit_f32_p32.sv	2025-05-30 04:27:18
+@@ -9,6 +9,7 @@
+ );
+ 
+   assign io_in_ready = io_out_ready;	// @[generators/testchipip/src/main/scala/serdes/Serdes.scala:71:7]
+-  assign io_out_valid = ~io_in_valid;
++  assign io_out_valid = io_in_valid;	// @[generators/testchipip/src/main/scala/serdes/Serdes.scala:71:7]
++  assign io_out_bits_phit = io_in_bits_flit;	// @[generators/testchipip/src/main/scala/serdes/Serdes.scala:71:7]
+ endmodule
+ 
+diff -ruN verilog-boom-v3-bugged/gen-collateral/GenericDigitalInIOCell.v verilog-boom-v3-original/gen-collateral/GenericDigitalInIOCell.v
+--- verilog-boom-v3-bugged/gen-collateral/GenericDigitalInIOCell.v	2025-06-01 16:42:11
++++ verilog-boom-v3-original/gen-collateral/GenericDigitalInIOCell.v	2025-05-30 04:27:18
+@@ -1,3 +1,4 @@
++
+ `timescale 1ns/1ps
+ module GenericDigitalInIOCell(
+     input pad,
+@@ -6,10 +7,5 @@
+ );
+ 
+     assign i = ie ? pad : 1'b0;
+-    assign pad = ~pad;
+-
+-    reg bug_reg_1;
+-
+-    always @(*) begin end
+ 
+-endmodule
++endmodule
+\ No newline at end of file
+diff -ruN verilog-boom-v3-bugged/gen-collateral/GenericDigitalOutIOCell.v verilog-boom-v3-original/gen-collateral/GenericDigitalOutIOCell.v
+--- verilog-boom-v3-bugged/gen-collateral/GenericDigitalOutIOCell.v	2025-06-01 16:42:11
++++ verilog-boom-v3-original/gen-collateral/GenericDigitalOutIOCell.v	2025-05-30 04:27:18
+@@ -1,3 +1,4 @@
++
+ `timescale 1ns/1ps
+ module GenericDigitalOutIOCell(
+     output pad,
+@@ -6,8 +7,5 @@
+ );
+ 
+     assign pad = oe ? o : 1'bz;
+-    assign pad = pad;
+-    wire bug_wire_1;
+ 
+-    always @(*) begin end
+-endmodule
++endmodule
+\ No newline at end of file
+diff -ruN verilog-boom-v3-bugged/gen-collateral/GenericSerializer_TLBeatw88_f32.sv verilog-boom-v3-original/gen-collateral/GenericSerializer_TLBeatw88_f32.sv
+--- verilog-boom-v3-bugged/gen-collateral/GenericSerializer_TLBeatw88_f32.sv	2025-06-01 17:08:49
++++ verilog-boom-v3-original/gen-collateral/GenericSerializer_TLBeatw88_f32.sv	2025-05-30 04:27:18
+@@ -66,13 +66,12 @@
+   wire             _GEN_2 = io_out_ready & (|_GEN_0);	// @[generators/testchipip/src/main/scala/serdes/Serdes.scala:23:{31,39}, src/main/scala/chisel3/util/Decoupled.scala:51:35]
+   always @(posedge clock) begin	// @[generators/testchipip/src/main/scala/serdes/Serdes.scala:8:7]
+     if (_GEN_2 & _io_out_bits_flit_T) begin	// @[generators/testchipip/src/main/scala/serdes/Serdes.scala:19:17, :22:39, :26:22, :28:25, :29:12, src/main/scala/chisel3/util/Decoupled.scala:51:35]
+-      if (io_in_valid) begin end
+       data_1 <= io_in_bits_payload[61:30];	// @[generators/testchipip/src/main/scala/serdes/Serdes.scala:19:17, :29:34]
+       data_2 <= {8'h0, io_in_bits_payload[85:62]};	// @[generators/testchipip/src/main/scala/serdes/Serdes.scala:19:17, :29:34]
+     end
+     if (reset)	// @[generators/testchipip/src/main/scala/serdes/Serdes.scala:8:7]
+       beat <= 2'h0;	// @[generators/testchipip/src/main/scala/serdes/Serdes.scala:8:7, :20:21]
+-    if (_GEN_2)	// @[src/main/scala/chisel3/util/Decoupled.scala:51:35]
++    else if (_GEN_2)	// @[src/main/scala/chisel3/util/Decoupled.scala:51:35]
+       beat <= beat == 2'h2 ? 2'h0 : beat + 2'h1;	// @[generators/testchipip/src/main/scala/serdes/Serdes.scala:8:7, :20:21, :27:{16,22,53}]
+   end // always @(posedge)
+   `ifdef ENABLE_INITIAL_REG_	// @[generators/testchipip/src/main/scala/serdes/Serdes.scala:8:7]
+@@ -98,7 +97,7 @@
+     `endif // FIRRTL_AFTER_INITIAL
+   `endif // ENABLE_INITIAL_REG_
+   assign io_in_ready = io_out_ready & _io_out_bits_flit_T;	// @[generators/testchipip/src/main/scala/serdes/Serdes.scala:8:7, :22:{31,39}]
+-  assign io_out_valid = ~|_GEN_0;	// @[generators/testchipip/src/main/scala/serdes/Serdes.scala:8:7, :23:{31,39}]
++  assign io_out_valid = |_GEN_0;	// @[generators/testchipip/src/main/scala/serdes/Serdes.scala:8:7, :23:{31,39}]
+   assign io_out_bits_flit = _io_out_bits_flit_T ? {io_in_bits_payload[29:0], io_in_bits_head, io_in_bits_tail} : _GEN_1[beat];	// @[generators/testchipip/src/main/scala/serdes/Serdes.scala:8:7, :20:21, :22:39, :24:{26,52}]
+ endmodule
+ 
+diff -ruN verilog-boom-v3-bugged/gen-collateral/Queue1_TLBundleD_a32d128s6k4z3c.sv verilog-boom-v3-original/gen-collateral/Queue1_TLBundleD_a32d128s6k4z3c.sv
+--- verilog-boom-v3-bugged/gen-collateral/Queue1_TLBundleD_a32d128s6k4z3c.sv	2025-06-01 03:17:20
++++ verilog-boom-v3-original/gen-collateral/Queue1_TLBundleD_a32d128s6k4z3c.sv	2025-05-30 04:27:17
+@@ -75,10 +75,9 @@
+   always @(posedge clock) begin	// @[src/main/scala/chisel3/util/Decoupled.scala:243:7]
+     if (do_enq)	// @[src/main/scala/chisel3/util/Decoupled.scala:51:35, :263:27, :298:17, :301:{26,35}]
+       ram <= {io_enq_bits_corrupt, io_enq_bits_data, io_enq_bits_denied, io_enq_bits_sink, io_enq_bits_source, io_enq_bits_size, io_enq_bits_param, io_enq_bits_opcode};	// @[src/main/scala/chisel3/util/Decoupled.scala:256:91]
+-    else begin end
+     if (reset)	// @[src/main/scala/chisel3/util/Decoupled.scala:243:7]
+       full <= 1'h0;	// @[src/main/scala/chisel3/util/Decoupled.scala:259:27]
+-    if (~(do_enq == (full & io_deq_ready & io_deq_valid_0)))	// @[src/main/scala/chisel3/util/Decoupled.scala:51:35, :259:27, :263:27, :264:27, :276:{15,27}, :277:16, :285:16, :297:{24,39}, :298:17, :300:14, :301:{26,35}]
++    else if (~(do_enq == (full & io_deq_ready & io_deq_valid_0)))	// @[src/main/scala/chisel3/util/Decoupled.scala:51:35, :259:27, :263:27, :264:27, :276:{15,27}, :277:16, :285:16, :297:{24,39}, :298:17, :300:14, :301:{26,35}]
+       full <= do_enq;	// @[src/main/scala/chisel3/util/Decoupled.scala:51:35, :259:27, :263:27, :298:17, :301:{26,35}]
+   end // always @(posedge)
+   `ifdef ENABLE_INITIAL_REG_	// @[src/main/scala/chisel3/util/Decoupled.scala:243:7]
+@@ -104,7 +103,7 @@
+   `endif // ENABLE_INITIAL_REG_
+   assign io_enq_ready = ~full;	// @[src/main/scala/chisel3/util/Decoupled.scala:243:7, :259:27, :286:19]
+   assign io_deq_valid = io_deq_valid_0;	// @[src/main/scala/chisel3/util/Decoupled.scala:243:7, :285:16, :297:{24,39}]
+-  assign io_deq_bits_opcode = ~full ? ram[2:0] : io_enq_bits_opcode;	// @[src/main/scala/chisel3/util/Decoupled.scala:243:7, :256:91, :259:27, :293:17, :298:17, :299:19]
++  assign io_deq_bits_opcode = full ? ram[2:0] : io_enq_bits_opcode;	// @[src/main/scala/chisel3/util/Decoupled.scala:243:7, :256:91, :259:27, :293:17, :298:17, :299:19]
+   assign io_deq_bits_param = full ? ram[4:3] : io_enq_bits_param;	// @[src/main/scala/chisel3/util/Decoupled.scala:243:7, :256:91, :259:27, :293:17, :298:17, :299:19]
+   assign io_deq_bits_size = full ? ram[7:5] : io_enq_bits_size;	// @[src/main/scala/chisel3/util/Decoupled.scala:243:7, :256:91, :259:27, :293:17, :298:17, :299:19]
+   assign io_deq_bits_source = full ? ram[13:8] : io_enq_bits_source;	// @[src/main/scala/chisel3/util/Decoupled.scala:243:7, :256:91, :259:27, :293:17, :298:17, :299:19]
+diff -ruN verilog-boom-v3-bugged/gen-collateral/SerialRAM.sv verilog-boom-v3-original/gen-collateral/SerialRAM.sv
+--- verilog-boom-v3-bugged/gen-collateral/SerialRAM.sv	2025-06-01 17:05:52
++++ verilog-boom-v3-original/gen-collateral/SerialRAM.sv	2025-05-30 04:27:18
+@@ -130,7 +130,7 @@
+     .io_tsi_in_ready         (io_tsi_in_ready),
+     .io_tsi_in_valid         (io_tsi_in_valid),
+     .io_tsi_in_bits          (io_tsi_in_bits),
+-    .io_tsi_out_ready        (io_ser_out_ready),
++    .io_tsi_out_ready        (io_tsi_out_ready),
+     .io_tsi_out_valid        (io_tsi_out_valid),
+     .io_tsi_out_bits         (io_tsi_out_bits)
+   );	// @[generators/testchipip/src/main/scala/tsi/TSIHarness.scala:76:28]
+@@ -138,7 +138,7 @@
+     .clock                   (clock),
+     .reset                   (reset),
+     .auto_in_a_ready         (_buffer_auto_in_a_ready),
+-    .auto_in_a_valid         (_tsi2tl_auto_out_a_valid),
++    .auto_in_a_valid         (_tsi2tl_auto_out_a_valid),	// @[generators/testchipip/src/main/scala/tsi/TSIHarness.scala:76:28]
+     .auto_in_a_bits_opcode   (_tsi2tl_auto_out_a_bits_opcode),	// @[generators/testchipip/src/main/scala/tsi/TSIHarness.scala:76:28]
+     .auto_in_a_bits_size     (_tsi2tl_auto_out_a_bits_size),	// @[generators/testchipip/src/main/scala/tsi/TSIHarness.scala:76:28]
+     .auto_in_a_bits_address  (_tsi2tl_auto_out_a_bits_address),	// @[generators/testchipip/src/main/scala/tsi/TSIHarness.scala:76:28]
+@@ -208,6 +208,5 @@
+     .io_inner_ser_4_out_valid     (_serdesser_io_ser_4_out_valid),	// @[generators/testchipip/src/main/scala/tsi/TSIHarness.scala:66:29]
+     .io_inner_ser_4_out_bits_flit (_serdesser_io_ser_4_out_bits_flit)	// @[generators/testchipip/src/main/scala/tsi/TSIHarness.scala:66:29]
+   );	// @[generators/testchipip/src/main/scala/tsi/TSIHarness.scala:129:21]
+-  assign io_tsi_out_valid = io_ser_in_valid;
+ endmodule
+ 
+diff -ruN verilog-boom-v3-bugged/gen-collateral/SimDRAM.v verilog-boom-v3-original/gen-collateral/SimDRAM.v
+--- verilog-boom-v3-bugged/gen-collateral/SimDRAM.v	2025-06-01 17:10:42
++++ verilog-boom-v3-original/gen-collateral/SimDRAM.v	2025-05-30 04:27:18
+@@ -261,7 +261,6 @@
+   assign axi_r_bits_last = __r_last_reg;
+   assign axi_b_valid = __b_valid_reg;
+   assign axi_b_bits_id = __b_id_reg;
+-  assign axi_b_bits_id = axi_b_bits_id;
+   assign axi_b_bits_resp = __b_resp_reg;
+ 
+-endmodule
++endmodule
+\ No newline at end of file
+diff -ruN verilog-boom-v3-bugged/gen-collateral/SimJTAG.v verilog-boom-v3-original/gen-collateral/SimJTAG.v
+--- verilog-boom-v3-bugged/gen-collateral/SimJTAG.v	2025-06-01 16:42:11
++++ verilog-boom-v3-original/gen-collateral/SimJTAG.v	2025-05-30 04:27:18
+@@ -81,6 +81,4 @@
+       end // else: !if(reset || r_reset)
+    end // always @ (posedge clock)
+ 
+-   always @(*) begin end
+-
+-endmodule
++endmodule
+\ No newline at end of file
+diff -ruN verilog-boom-v3-bugged/gen-collateral/SimTSI.v verilog-boom-v3-original/gen-collateral/SimTSI.v
+--- verilog-boom-v3-bugged/gen-collateral/SimTSI.v	2025-06-01 17:10:42
++++ verilog-boom-v3-original/gen-collateral/SimTSI.v	2025-05-30 04:27:18
+@@ -36,7 +36,7 @@
+ 
+     assign tsi_in_valid  = __in_valid_reg;
+     assign tsi_in_bits   = __in_bits_reg;
+-    assign tsi_out_ready = ~__out_ready_reg;
++    assign tsi_out_ready = __out_ready_reg;
+     assign exit = __exit_reg;
+ 
+     // Evaluate the signals on the positive edge
+@@ -68,4 +68,4 @@
+         end
+     end
+ 
+-endmodule
++endmodule
+\ No newline at end of file
+diff -ruN verilog-boom-v3-bugged/gen-collateral/SimUART.v verilog-boom-v3-original/gen-collateral/SimUART.v
+--- verilog-boom-v3-bugged/gen-collateral/SimUART.v	2025-06-01 16:54:22
++++ verilog-boom-v3-original/gen-collateral/SimUART.v	2025-05-30 04:27:18
+@@ -28,9 +28,7 @@
+ 
+     output                   serial_in_valid,
+     input                    serial_in_ready,
+-    output [`DATA_WIDTH-1:0] serial_in_bits,
+-
+-    input dummy_mdnp_port,
++    output [`DATA_WIDTH-1:0] serial_in_bits
+ );
+ 
+    wire                      __in_ready;
+@@ -52,13 +50,11 @@
+    reg [`DATA_WIDTH-1:0] __in_bits_reg;
+ 
+    reg                   __out_ready_reg;
+-   reg bug_reg_2;
+ 
+ 
+    
+    // Evaluate the signals on the positive edge
+    always @(posedge clock) begin
+-      if (serial_in_ready) begin end
+       if (reset) begin
+          __in_valid = 0;
+          __out_ready = 0;
+@@ -90,7 +86,5 @@
+    assign serial_out_ready = __out_ready_reg;
+    assign __out_valid = serial_out_valid;
+    assign __out_bits = serial_out_bits;
+-
+-   assign serial_in_valid = ~serial_in_valid;
+ 
+-endmodule
++endmodule
+\ No newline at end of file
+diff -ruN verilog-boom-v3-bugged/gen-collateral/TLMonitor_63.sv verilog-boom-v3-original/gen-collateral/TLMonitor_63.sv
+--- verilog-boom-v3-bugged/gen-collateral/TLMonitor_63.sv	2025-06-01 03:09:38
++++ verilog-boom-v3-original/gen-collateral/TLMonitor_63.sv	2025-05-30 04:27:18
+@@ -654,7 +654,7 @@
+   wire        _GEN_54 = _d_first_T_2 & d_first_2 & d_release_ack;	// @[generators/rocket-chip/src/main/scala/tilelink/Edges.scala:231:25, generators/rocket-chip/src/main/scala/tilelink/Monitor.scala:673:46, :788:{25,70}, src/main/scala/chisel3/util/Decoupled.scala:51:35]
+   always @(posedge clock) begin	// @[generators/rocket-chip/src/main/scala/tilelink/Monitor.scala:36:7]
+     if (reset) begin	// @[generators/rocket-chip/src/main/scala/tilelink/Monitor.scala:36:7]
+-      a_first_counter <= 9'h1;	// @[generators/rocket-chip/src/main/scala/tilelink/Edges.scala:229:27]
++      a_first_counter <= 9'h0;	// @[generators/rocket-chip/src/main/scala/tilelink/Edges.scala:229:27]
+       d_first_counter <= 9'h0;	// @[generators/rocket-chip/src/main/scala/tilelink/Edges.scala:229:27]
+       inflight <= 2'h0;	// @[generators/rocket-chip/src/main/scala/tilelink/Monitor.scala:614:27]
+       inflight_opcodes <= 4'h0;	// @[generators/rocket-chip/src/main/scala/tilelink/Monitor.scala:616:35]
+diff -ruN verilog-boom-v3-bugged/gen-collateral/head_36x5.sv verilog-boom-v3-original/gen-collateral/head_36x5.sv
+--- verilog-boom-v3-bugged/gen-collateral/head_36x5.sv	2025-06-01 16:38:03
++++ verilog-boom-v3-original/gen-collateral/head_36x5.sv	2025-05-30 04:27:17
+@@ -16,9 +16,8 @@
+ );
+ 
+   reg [4:0] Memory[0:35];	// @[generators/rocket-chip-inclusive-cache/design/craft/inclusivecache/src/ListBuffer.scala:48:18]
+-  reg bug_reg_3;
+   always @(posedge W0_clk) begin	// @[generators/rocket-chip-inclusive-cache/design/craft/inclusivecache/src/ListBuffer.scala:48:18]
+-    if (!(W0_en & 1'h1))	// @[generators/rocket-chip-inclusive-cache/design/craft/inclusivecache/src/ListBuffer.scala:48:18]
++    if (W0_en & 1'h1)	// @[generators/rocket-chip-inclusive-cache/design/craft/inclusivecache/src/ListBuffer.scala:48:18]
+       Memory[W0_addr] <= W0_data;	// @[generators/rocket-chip-inclusive-cache/design/craft/inclusivecache/src/ListBuffer.scala:48:18]
+     if (W1_en & 1'h1)	// @[generators/rocket-chip-inclusive-cache/design/craft/inclusivecache/src/ListBuffer.scala:48:18]
+       Memory[W1_addr] <= W1_data;	// @[generators/rocket-chip-inclusive-cache/design/craft/inclusivecache/src/ListBuffer.scala:48:18]
+diff -ruN verilog-boom-v3-bugged/gen-collateral/lb_32x128.sv verilog-boom-v3-original/gen-collateral/lb_32x128.sv
+--- verilog-boom-v3-bugged/gen-collateral/lb_32x128.sv	2025-06-01 16:38:07
++++ verilog-boom-v3-original/gen-collateral/lb_32x128.sv	2025-05-30 04:27:17
+@@ -12,9 +12,8 @@
+ );
+ 
+   reg [127:0] Memory[0:31];	// @[generators/boom/src/main/scala/v3/lsu/mshrs.scala:580:15]
+-  wire bug_wire_2;
+   always @(posedge W0_clk) begin	// @[generators/boom/src/main/scala/v3/lsu/mshrs.scala:580:15]
+-    if (!(W0_en & 1'h1))	// @[generators/boom/src/main/scala/v3/lsu/mshrs.scala:580:15]
++    if (W0_en & 1'h1)	// @[generators/boom/src/main/scala/v3/lsu/mshrs.scala:580:15]
+       Memory[W0_addr] <= W0_data;	// @[generators/boom/src/main/scala/v3/lsu/mshrs.scala:580:15]
+   end // always @(posedge)
+   `ifdef ENABLE_INITIAL_MEM_	// @[generators/boom/src/main/scala/v3/lsu/mshrs.scala:580:15]
+diff -ruN verilog-boom-v3-bugged/gen-collateral/plusarg_reader.v verilog-boom-v3-original/gen-collateral/plusarg_reader.v
+--- verilog-boom-v3-bugged/gen-collateral/plusarg_reader.v	2025-06-01 16:38:22
++++ verilog-boom-v3-original/gen-collateral/plusarg_reader.v	2025-05-30 04:27:18
+@@ -14,13 +14,13 @@
+ 
+ `ifdef SYNTHESIS
+ assign out = DEFAULT;
+-assign out = DEFAULT;
+ `else
++reg [WIDTH-1:0] myplus;
+ assign out = myplus;
+ 
+ initial begin
+-   myplus = myplus;
++   if (!$value$plusargs(FORMAT, myplus)) myplus = DEFAULT;
+ end
+ `endif
+ 
+-endmodule
++endmodule
+\ No newline at end of file
+diff -ruN verilog-boom-v3-bugged/gen-collateral/ram_12x110.sv verilog-boom-v3-original/gen-collateral/ram_12x110.sv
+--- verilog-boom-v3-bugged/gen-collateral/ram_12x110.sv	2025-06-01 16:42:11
++++ verilog-boom-v3-original/gen-collateral/ram_12x110.sv	2025-05-30 04:27:17
+@@ -12,9 +12,9 @@
+ );
+ 
+   reg [109:0] Memory[0:11];	// @[src/main/scala/chisel3/util/Decoupled.scala:256:91]
+-  always @(posedge W0_clk or posedge W0_en) begin	// @[src/main/scala/chisel3/util/Decoupled.scala:256:91]
++  always @(posedge W0_clk) begin	// @[src/main/scala/chisel3/util/Decoupled.scala:256:91]
+     if (W0_en & 1'h1)	// @[src/main/scala/chisel3/util/Decoupled.scala:256:91]
+-      Memory[W0_addr] <= W0_data + 1;
++      Memory[W0_addr] <= W0_data;	// @[src/main/scala/chisel3/util/Decoupled.scala:256:91]
+   end // always @(posedge)
+   `ifdef ENABLE_INITIAL_MEM_	// @[src/main/scala/chisel3/util/Decoupled.scala:256:91]
+     reg [127:0] _RANDOM_MEM;	// @[src/main/scala/chisel3/util/Decoupled.scala:256:91]
+diff -ruN verilog-boom-v3-bugged/gen-collateral/ram_2x192.sv verilog-boom-v3-original/gen-collateral/ram_2x192.sv
+--- verilog-boom-v3-bugged/gen-collateral/ram_2x192.sv	2025-06-01 03:26:18
++++ verilog-boom-v3-original/gen-collateral/ram_2x192.sv	2025-05-30 04:27:18
+@@ -15,7 +15,6 @@
+   always @(posedge W0_clk) begin	// @[src/main/scala/chisel3/util/Decoupled.scala:256:91]
+     if (W0_en & 1'h1)	// @[src/main/scala/chisel3/util/Decoupled.scala:256:91]
+       Memory[W0_addr] <= W0_data;	// @[src/main/scala/chisel3/util/Decoupled.scala:256:91]
+-    else begin end
+   end // always @(posedge)
+   `ifdef ENABLE_INITIAL_MEM_	// @[src/main/scala/chisel3/util/Decoupled.scala:256:91]
+     reg [191:0] _RANDOM_MEM;	// @[src/main/scala/chisel3/util/Decoupled.scala:256:91]
+diff -ruN verilog-boom-v3-bugged/gen-collateral/ram_2x63.sv verilog-boom-v3-original/gen-collateral/ram_2x63.sv
+--- verilog-boom-v3-bugged/gen-collateral/ram_2x63.sv	2025-06-01 16:42:11
++++ verilog-boom-v3-original/gen-collateral/ram_2x63.sv	2025-05-30 04:27:18
+@@ -12,9 +12,9 @@
+ );
+ 
+   reg [62:0] Memory[0:1];	// @[src/main/scala/chisel3/util/Decoupled.scala:256:91]
+-  always @(posedge W0_clk or posedge W0_en) begin	// @[src/main/scala/chisel3/util/Decoupled.scala:256:91]
++  always @(posedge W0_clk) begin	// @[src/main/scala/chisel3/util/Decoupled.scala:256:91]
+     if (W0_en & 1'h1)	// @[src/main/scala/chisel3/util/Decoupled.scala:256:91]
+-      Memory[W0_addr] <= W0_data + 1;
++      Memory[W0_addr] <= W0_data;	// @[src/main/scala/chisel3/util/Decoupled.scala:256:91]
+   end // always @(posedge)
+   `ifdef ENABLE_INITIAL_MEM_	// @[src/main/scala/chisel3/util/Decoupled.scala:256:91]
+     reg [63:0] _RANDOM_MEM;	// @[src/main/scala/chisel3/util/Decoupled.scala:256:91]
+diff -ruN verilog-boom-v3-bugged/gen-collateral/ram_5x79.sv verilog-boom-v3-original/gen-collateral/ram_5x79.sv
+--- verilog-boom-v3-bugged/gen-collateral/ram_5x79.sv	2025-06-01 03:24:09
++++ verilog-boom-v3-original/gen-collateral/ram_5x79.sv	2025-05-30 04:27:17
+@@ -13,7 +13,7 @@
+ 
+   reg [78:0] Memory[0:4];	// @[generators/boom/src/main/scala/v3/util/util.scala:464:20]
+   always @(posedge W0_clk) begin	// @[generators/boom/src/main/scala/v3/util/util.scala:464:20]
+-    if (!(W0_en & 1'h1))	// @[generators/boom/src/main/scala/v3/util/util.scala:464:20]
++    if (W0_en & 1'h1)	// @[generators/boom/src/main/scala/v3/util/util.scala:464:20]
+       Memory[W0_addr] <= W0_data;	// @[generators/boom/src/main/scala/v3/util/util.scala:464:20]
+   end // always @(posedge)
+   `ifdef ENABLE_INITIAL_MEM_	// @[generators/boom/src/main/scala/v3/util/util.scala:464:20]
